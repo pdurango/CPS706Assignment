@@ -1,42 +1,51 @@
 import java.io.*;
 import java.net.*;
+import java.util.LinkedList;
 
 public class Client
 {
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
-        try
-        {
-            Socket clientSocket;
-            Socket connection = null;
-            String message = "brown bricks";
-            String serverReply;
 
-            clientSocket = new Socket("localhost", 40290);
-            //clientSocket = new Socket(InetAddress.getByName("192.168.1.16"), 40290);
-            //clientSocket = new Socket(InetAddress.getByName("99.246.236.65"), 40290);
+        //BufferedReader brClientFileChoice = new BufferedReader(new InputStreamReader(System.in));
+        //System.out.println("Pick a file from 1-4");
+        //String clientChoice = brClientFileChoice.readLine();
+        getLinkTCP();
+    }
 
-            BufferedReader inputFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+    public static LinkedList<String> getLinkTCP() throws Exception
+    {
+        InputStream inputStream;
+        OutputStream outputStream;
+        byte[] bytes;
+        Socket clientSocket;
+        PrintWriter outToServer;
+        int count;
 
-            System.out.println("Server says: " + inputFromServer.readLine());
+        clientSocket = new Socket("localhost", 40290);
+        //clientSocket = new Socket(InetAddress.getByName("192.168.1.16"), 40290);
+        //clientSocket = new Socket(InetAddress.getByName("99.246.236.65"), 40290);
 
-            BufferedReader userInputBR = new BufferedReader(new InputStreamReader(System.in));
-            String userInput = userInputBR.readLine();
+        outToServer = new PrintWriter(clientSocket.getOutputStream(), true); //outputs to server
 
-            out.println(userInput);
-            System.out.println("Server says2: " + inputFromServer.readLine());
+        outToServer.println("GET src/index.html HTTP/1.1\r\n\n");
+        outToServer.flush();
 
-            if ("exit".equalsIgnoreCase(userInput)) {
-                clientSocket.close();
-                //break;
-            }
-
-
-        } catch (IOException ioexception)
-        {
-            ioexception.printStackTrace();
+        bytes = new byte[1024 * 2];
+        inputStream = clientSocket.getInputStream();
+        outputStream = new FileOutputStream("src/ClientFiles/HisCinemaIndex.html");
+        while ((count = inputStream.read(bytes)) >= 0) {
+            outputStream.write(bytes, 0, count);
+            System.out.println("count " + count);
         }
+        //parsehtml into linkedlist full of video links
+        //return linkedlist
+    return null;
+    }
+
+    public static LinkedList<String> htmlParser (File htmlCode)
+    {
+        return null;
     }
 }

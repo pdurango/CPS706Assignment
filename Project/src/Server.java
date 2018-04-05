@@ -10,6 +10,12 @@ public class Server
             ServerSocket welcomeSocket;
             Socket connection;
             String clientMessage;
+            InputStream inputStream;
+            OutputStream outputStream;
+            int size = 0;
+            byte[] bytes;
+            OutputStream os;
+            BufferedReader inputFromClient;
 
             welcomeSocket = new ServerSocket(40290);
             System.out.println("Waiting for connection...");
@@ -17,20 +23,31 @@ public class Server
             {
                 connection = welcomeSocket.accept();
                 System.out.println("Connection received from " + connection.getInetAddress().getHostName());
-                OutputStream os = connection.getOutputStream();
-                PrintWriter pw = new PrintWriter(os, true);
-                pw.println("What's your name?");
+                os = connection.getOutputStream();
 
-                BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                inputFromClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                 clientMessage = inputFromClient.readLine();
-                pw.println("Hello " + clientMessage);
-                pw.close();
+                System.out.println(clientMessage);
+                //pw.println("Hello " + clientMessage);
 
-                System.out.println("Just said hello to " + clientMessage);
+                //OutputStreamWriter outWriter = new OutputStreamWriter(connection.getOutputStream());
+                //outWriter.write("200 OK HTTP/1.1\r\n\n");
+                //outWriter.flush();
+                bytes = new byte[1024 * 2];
+                inputStream = new FileInputStream("src/HisCinemaFiles/index.html");
+                outputStream = connection.getOutputStream();
+                while ((size = inputStream.read(bytes)) >= 0) {
+                    outputStream.write(bytes, 0, size);
+                    System.out.println("Size: " + size);
+                }
+                 inputStream.close(); outputStream.close(); inputFromClient.close(); os.close();
+
+                System.out.println("Sent index.html to " + connection.getInetAddress().getHostName());
             }
         } catch (IOException ioexception) {
             ioexception.printStackTrace();
         }
     }
 }
+
