@@ -1,53 +1,53 @@
 import java.io.*;
 import java.net.*;
 
-public class Server
-{
-    public static void main (String[] args)
-    {
-        try
-        {
-            ServerSocket welcomeSocket;
-            Socket connection;
-            String clientMessage;
-            InputStream inputStream;
-            OutputStream outputStream;
-            int size = 0;
-            byte[] bytes;
-            OutputStream os;
-            BufferedReader inputFromClient;
+public class Server {
+    public static final int PORT = 40290;
 
-            welcomeSocket = new ServerSocket(40290);
-            System.out.println("Waiting for connection...");
-            while (true)
-            {
-                connection = welcomeSocket.accept();
-                System.out.println("Connection received from " + connection.getInetAddress().getHostName());
-                os = connection.getOutputStream();
+    public static void main(String[] args) throws IOException {
+        new Server().runServer();
 
-                inputFromClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    }
+    public void runServer() throws IOException{
+        ServerSocket serverSocket = new ServerSocket(PORT);
+        //serverSocket.setSoTimeout(10000);
+        System.out.println("Server up and ready...");
+        while(true){
+            Socket socket= serverSocket.accept();
+            new ServerThread(socket).start();
+        }
 
-                clientMessage = inputFromClient.readLine();
-                System.out.println(clientMessage);
-                //pw.println("Hello " + clientMessage);
+    }
+    public class ServerThread extends Thread{
+        Socket socket;
+        ServerThread(Socket socket){
+            this.socket = socket;
+        }
+        public void run(){
+            try{
+                String message = null;
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream());
+                BufferedWriter outToClient = new BufferedWriter(osw);
+                while((message = bufferedReader.readLine()) != null){
+                    System.out.println("Incoming message " + message);
+                    break;
 
-                //OutputStreamWriter outWriter = new OutputStreamWriter(connection.getOutputStream());
-                //outWriter.write("200 OK HTTP/1.1\r\n\n");
-                //outWriter.flush();
-                bytes = new byte[1024 * 2];
-                inputStream = new FileInputStream("src/HisCinemaFiles/index.html");
-                outputStream = connection.getOutputStream();
-                while ((size = inputStream.read(bytes)) >= 0) {
-                    outputStream.write(bytes, 0, size);
-                    System.out.println("Size: " + size);
                 }
-                 inputStream.close(); outputStream.close(); inputFromClient.close(); os.close();
 
-                System.out.println("Sent index.html to " + connection.getInetAddress().getHostName());
+                String [] fields = message.split("\\s");
+                BufferedReader in = new BufferedReader(new FileReader("src/HisCinemaFiles/index.html"));
+                String str = null;
+                while((str = in.readLine()) != null){
+                    outToClient.write(str + "\n");
+                }
+                outToClient.flush();
+                bufferedReader.close();
+                in.close();
+
+            }catch (IOException e){
+                e.printStackTrace();
             }
-        } catch (IOException ioexception) {
-            ioexception.printStackTrace();
         }
     }
 }
-
