@@ -2,7 +2,7 @@ import java.io.*;
 import java.net.*;
 
 public class HisCinemaDns {
-	static int PORT = 40290;
+	private static final int PORT = 40290;
 	private Socket connectionSocket;
 
 	public static void main(String[] args) throws Exception{
@@ -11,17 +11,17 @@ public class HisCinemaDns {
 	}
 	public void runServer() throws Exception{
 		
-		String path = "C:/Users/LiranF/workspace/CPS706- W2018 Assignment/";
-		String messageReceive;
-		String fileLocation;
+		String path = "C:/Users/LiranF/workspace/CPS706- W2018 Assignment/"; //Path where index file resides
+		String messageReceive; // Variable will store the 'GET' request received from client
+		String fileLocation; // Variable will store the directory and name of file. i.e. directory/nameoffile.html
 		
-		ServerSocket welcomeSocket = new ServerSocket(PORT);
-		welcomeSocket.setSoTimeout(60000);
+		ServerSocket welcomeSocket = new ServerSocket(PORT); // Create socket with port  
+		welcomeSocket.setSoTimeout(60000); // Set timeout for server of 1 minute
 		
 		System.out.println("Server up and ready...");
 		
 		while(true){
-			connectionSocket = welcomeSocket.accept();
+			connectionSocket = welcomeSocket.accept(); // Listens to a connection and accepts it from client. Returns new socket
 			
 			BufferedReader inFromClient = 
 					new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
