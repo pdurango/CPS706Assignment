@@ -9,6 +9,7 @@ public class HisCinemaDns {
 		new HisCinemaDns().runServer();
 
 	}
+	
 	public void runServer() throws Exception{
 		
 		String path = "C:/Users/LiranF/workspace/CPS706- W2018 Assignment/"; //Path where index file resides
@@ -22,7 +23,6 @@ public class HisCinemaDns {
 		
 		while(true){
 			connectionSocket = welcomeSocket.accept(); // Listens to a connection and accepts it from client. Returns new socket
-			
 			BufferedReader inFromClient = 
 					new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 			
@@ -54,5 +54,4 @@ public class HisCinemaDns {
 		outToClient.close();
 		System.out.println("File sent succesfully!");
 	}
-
 }
