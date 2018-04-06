@@ -7,11 +7,9 @@ public class HisCinemaDns {
 
 	public static void main(String[] args) throws Exception{
 		new HisCinemaDns().runServer();
-
 	}
 	
 	public void runServer() throws Exception{
-		
 		String path = "C:/Users/LiranF/workspace/CPS706- W2018 Assignment/"; //Path where index file resides
 		String messageReceive; // Variable will store the 'GET' request received from client
 		String fileLocation; // Variable will store the directory and name of file. i.e. directory/nameoffile.html
