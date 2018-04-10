@@ -16,32 +16,29 @@ public class Client
 
         LinkedList<String> links = getIndexTCP();
 
-        BufferedReader brClientFileChoice = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Pick a file from 1-4");
-        String clientChoice = brClientFileChoice.readLine();
+        if (!links.isEmpty())
+        {
+            BufferedReader brClientFileChoice = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Pick a file from 1-4");
+            String clientChoice = brClientFileChoice.readLine();
 
-        if (clientChoice.equalsIgnoreCase("exit"))
-        {
-            System.out.println("Exiting program...");
-            System.exit(0);
-        }
-        
-        /* else if (Integer.parseInt(clientChoice) > links.size())
-        {
-            System.out.println("Pick again");
-            clientChoice = brClientFileChoice.readLine();
-        } */
-
-        else
-        {
-            for(int i = 0; i < links.size(); i++)
+            if (clientChoice.equalsIgnoreCase("exit"))
             {
-                if (links.get(i).contains(clientChoice))
+                System.out.println("Exiting program...");
+                System.exit(0);
+            } else
+            {
+                for (int i = 0; i < links.size(); i++)
                 {
-                    System.out.println(links.get(i));
+                    if (links.get(i).contains(clientChoice))
+                    {
+                        System.out.println(links.get(i));
+                    }
                 }
             }
         }
+        else
+            System.exit(0);
     }
 
 
@@ -54,14 +51,15 @@ public class Client
         PrintWriter outToServer;
         int count;
         File file = new File("src/ClientFiles/HisCinemaIndex.html");
-        LinkedList<String> linksFromIndex = new LinkedList<>();
+        LinkedList<String> linksFromIndex;
+        String serverHTTPMessage = "";
 
         //clientSocket = new Socket("localhost", PORT);
         clientSocket = new Socket(InetAddress.getByName(IPADDRESS), PORT);
 
         outToServer = new PrintWriter(clientSocket.getOutputStream(), true); //outputs to server
 
-        outToServer.println("GET src/index.html HTTP/1.1\r\n\n");
+        outToServer.println("GET index.html /1.1");
         outToServer.flush();
 
         bytes = new byte[1024 * 2];
@@ -69,9 +67,10 @@ public class Client
         outputStream = new FileOutputStream(file);
         while ((count = inputStream.read(bytes)) >= 0) {
             outputStream.write(bytes, 0, count);
-            System.out.println("count " + count);
         }
 
+        serverHTTPMessage = htmlParserHTTPMessage(file);
+        System.out.println("message: " + serverHTTPMessage);
         linksFromIndex = htmlParser(file);
         return linksFromIndex;
     }
@@ -83,11 +82,38 @@ public class Client
         try (BufferedReader br = new BufferedReader(new FileReader(htmlFile))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if(!line.contains("<"))
+                if(!(line.contains("<") || line.contains("HTTP/1.1")))
                     links.add(line);
             }
         }
         System.out.println("list " + links);
         return links;
     }
+
+    public String htmlParserHTTPMessage (File htmlFile) throws IOException
+    {
+        String message = "";
+        try (BufferedReader br = new BufferedReader(new FileReader(htmlFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.contains("200 OK HTTP/1.1"))
+                {
+                    message = "200 OK HTTP/1.1";
+                    break;
+                }
+                else if (line.contains("505 Version Not Supported HTTP/1.1"))
+                {
+                    message = "505 Version Not Supported HTTP/1.1";
+                    break;
+                }
+                else if (line.contains("404 File Not Found HTTP/1.1"))
+                {
+                    message = "404 File Not Found HTTP/1.1";
+                    break;
+                }
+            }
+        }
+        return message;
+    }
 }
+
