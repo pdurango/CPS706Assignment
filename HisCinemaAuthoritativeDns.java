@@ -24,10 +24,10 @@ public class HisCinemaAuthoritativeDns {
 			Scanner scan = new Scanner(file);
 			
 			while(scan.hasNext()){
-				String line = scan.nextLine().toString(); //Error here!!!!
-				if(line.contains(receiveData())){
-					System.out.println("af");
-					//sendData(line);
+				System.out.println("Incoming message " + receiveData());
+				String line = scan.nextLine().toString();
+				if(line.contains(receiveData().trim())){
+					sendData(line);
 				}
 			}
 			scan.close();
