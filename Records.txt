@@ -1,0 +1,15 @@
+hisCinema:
+send index file
+
+Local Dns:
+(herCDN.com,NSherCDN.com,NS)
+(NSherCDN.com,IPher,A)
+(hiscinema.com,NShiscinema.com,NS)
+(NShiscinema.com,IPhis,A)
+
+hisCinemaAuthor:
+(video.hiscinema.com,herCDN.com,R)
+	
+herCDN Author:
+(herCDN.com,www.herCDN.com,CN)
+(www.herCDN.com,IPwwww,A)
