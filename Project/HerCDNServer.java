@@ -23,7 +23,6 @@ public class HerCDNServer implements Runnable
         }
     }
 
-    @SuppressWarnings("Duplicates")
     public void run()
     {
         try
@@ -41,7 +40,6 @@ public class HerCDNServer implements Runnable
                 BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 
                 System.out.println("2");
-                //messageReceive = inFromClient.readLine(); //NOT GETTING PAST HERE
                 messageReceive = null;
                 for (String line = inFromClient.readLine(); line != null; line = inFromClient.readLine())
                 {
@@ -95,7 +93,7 @@ public class HerCDNServer implements Runnable
                         Thread.sleep(5000);
                         //out.close();
                         //in.close();
-                        //outWriter.close(); TRY TO CLOSE THESE YOU RETARD
+                        //outWriter.close();
                     }
                 }
             }

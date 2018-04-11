@@ -137,7 +137,7 @@ public class Client
         return links;
     }
 
-    @SuppressWarnings("Duplicates")
+    
     public String htmlParserHTTPMessage(File htmlFile) throws IOException
     {
         String message = "";
@@ -163,58 +163,6 @@ public class Client
                 {
                     message = "404 File Not Found HTTP/1.1";
                     break;
-                }
-            }
-        }
-        return message;
-    }
-
-    @SuppressWarnings("Duplicates")
-    public String htmlParserHTTPMessage(File htmlFile, int fileNum) throws IOException
-    {
-        String message = "";
-        String filePath = "src/ClientFiles/" + fileNum;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(htmlFile)))
-        {
-            String line;
-            while ((line = br.readLine()) != null)
-            {
-                if (line.contains("200 OK HTTP/1.1"))
-                {
-                    message = "200 OK HTTP/1.1";
-                    break;
-                } else if (line.contains("505 Version Not Supported HTTP/1.1"))
-                {
-                    message = "505 Version Not Supported HTTP/1.1";
-                    break;
-                } else if (line.contains("400 BAD REQUEST HTTP/1.1"))
-                {
-                    message = "400 BAD REQUEST HTTP/1.1";
-                    break;
-                } else if (line.contains("404 File Not Found HTTP/1.1"))
-                {
-                    message = "404 File Not Found HTTP/1.1";
-                    break;
-                } else
-                {
-                    BufferedReader inputStream = new BufferedReader(new FileReader(htmlFile));
-                    File UIFile = new File(filePath);
-                    // if File doesnt exists, then create it
-                    if (!UIFile.exists())
-                    {
-                        UIFile.createNewFile();
-                    }
-                    FileWriter filewriter = new FileWriter(UIFile.getAbsoluteFile());
-                    BufferedWriter outputStream = new BufferedWriter(filewriter);
-                    String count;
-                    while ((count = inputStream.readLine()) != null)
-                    {
-                        outputStream.write(count);
-                    }
-                    outputStream.flush();
-                    outputStream.close();
-                    inputStream.close();
                 }
             }
         }
