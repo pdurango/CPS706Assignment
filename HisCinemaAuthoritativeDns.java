@@ -19,16 +19,16 @@ public class HisCinemaAuthoritativeDns {
         System.out.println("HisCinema Authoritative Server up and ready...");
 
 		while(true){
-			String filePath = "src/HisCinemaFiles/records.txt";
+			String filePath = "C:/Users/LiranF/workspace/CPS706- W2018 Assignment/src/records.txt";
 			File file = new File(filePath);
 			Scanner scan = new Scanner(file);
-			
+	
 			while(scan.hasNext()){
-				System.out.println("Incoming message " + receiveData());
 				String line = scan.nextLine().toString();
+				
 				if(line.contains(receiveData().trim())){
 					sendData(line);
-                    System.out.println("File sent successfully to: " + serverSocket.getInetAddress().getHostName());
+                    //System.out.println("File sent successfully to: " + serverSocket.getInetAddress().getHostName());
 				}
 			}
 			scan.close();
