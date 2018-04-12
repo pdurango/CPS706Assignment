@@ -117,7 +117,9 @@ public class Client
         while ((count = in.read(bytes)) != -1)
         {
             out.write(bytes, 0, count);
+            System.out.println("count" + count);
         }
+
     }
 
 
@@ -137,7 +139,7 @@ public class Client
         return links;
     }
 
-    
+
     public String htmlParserHTTPMessage(File htmlFile) throws IOException
     {
         String message = "";

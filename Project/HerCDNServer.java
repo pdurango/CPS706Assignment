@@ -90,8 +90,9 @@ public class HerCDNServer implements Runnable
                             out.write(buffer, 0, len);
                             System.out.println("LEN: " + len);
                         }
+
                         Thread.sleep(5000);
-                        //out.close();
+                        out.close();
                         //in.close();
                         //outWriter.close();
                     }
